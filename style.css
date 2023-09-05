@@ -1,0 +1,14 @@
+html,
+body {
+    scroll-behavior: smooth;
+}
+
+.mt-70 {
+    margin-top: 70px;
+}
+
+
+.card-all {
+    display: flex;
+    justify-content: center;
+}
