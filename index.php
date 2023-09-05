@@ -14,10 +14,10 @@ $db = new dbController();
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body id="kelas">
 
     <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm sticky-top">
         <div class="container">
             <a class="navbar-brand" href="#">CRUD</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,10 +25,10 @@ $db = new dbController();
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav ms-auto">
-                    <a class="nav-link active" aria-current="page" href="#">Kelas</a>
-                    <a class="nav-link" href="#">Jurusan</a>
-                    <a class="nav-link" href="#">Guru</a>
-                    <a class="nav-link" href="#">Siswa</a>
+                    <a class="nav-link active" href="#kelas">Kelas</a>
+                    <a class="nav-link" href="#jurusan">Jurusan</a>
+                    <a class="nav-link" href="#guru">Guru</a>
+                    <a class="nav-link" href="#siswa">Siswa</a>
                 </div>
             </div>
         </div>
@@ -36,7 +36,7 @@ $db = new dbController();
     <!-- NAVBAR-END -->
 
     <!-- KELAS -->
-    <div class="container" id="kelas">
+    <div class="container">
         <h1 class="text-center text-center mb-5 mt-70">Kelas</h1>
         <div class="row text-center justify-content-center">
 
@@ -67,7 +67,7 @@ $db = new dbController();
     <!-- KELAS-END -->
 
     <!-- JURUSAN -->
-    <div class="container" id="jurusan">
+    <div class="container pt-5" id="jurusan">
         <h1 class="text-center text-center mb-5 mt-3">Jurusan</h1>
         <div class="row text-center justify-content-center">
 
@@ -77,7 +77,7 @@ $db = new dbController();
             foreach ($row as $value) :
             ?>
 
-                <div class="card-all col-md-4 col-xl-4 mb-3">
+                <div class="card-all col-md-4 col-xl-4 mb-3 ">
                     <div class="card" style="width: 18rem;">
                         <img src="img/jurusan/<?php echo $value['f_nama']; ?>.jpg" class="card-img-top" alt="Jurusan">
                         <div class="card-body">
@@ -85,7 +85,8 @@ $db = new dbController();
                                 <?php echo $value['f_nama']; ?>
                             </h5>
                             <p class="card-text" style="font-size: 14px;">
-                                <?php echo $value['f_deskripsi']; ?>
+                                <?php echo substr($value['f_deskripsi'], 0, 80);
+                                echo "..." ?>
                             </p>
                         </div>
                     </div>
@@ -97,9 +98,9 @@ $db = new dbController();
         <!-- JURUSAN-END -->
 
         <!-- GURU -->
-        <div class="container" id="guru">
+        <div class="container pt-5" id="guru">
             <h1 class="text-center text-center mb-5 mt-3">Guru</h1>
-            <div class="row text-center justify-content-center">
+            <div class="row text -center justify-content-center">
 
                 <?php
                 $sql = "select * from t_guru";
@@ -111,7 +112,7 @@ $db = new dbController();
                         <div class="card" style="width: 18rem;">
                             <img src="img/guru/<?php echo $value['f_nama']; ?>.jpg" class="card-img-top" alt="Guru">
                             <div class="card-body">
-                                <h5 class="card-title text-dark">
+                                <h5 class="card-title text-dark text-center">
 
                                     <?php echo $value['f_nama']; ?>
 
@@ -126,7 +127,7 @@ $db = new dbController();
             <!-- GURU-END -->
 
             <!-- SISWA -->
-            <section id="siswa">
+            <section class="pt-5" id="siswa">
                 <div class="row text-center mb-3">
                     <div class="col">
                         <h2>Siswa</h2>
@@ -135,7 +136,7 @@ $db = new dbController();
 
                 <div class="row justify-content-center mb-5">
                     <div class="col-8">
-                        <table class="table">
+                        <table class="table mt-4">
                             <thead>
                                 <tr>
                                     <th scope="col">No</th>
@@ -148,7 +149,12 @@ $db = new dbController();
 
                                 <?php
                                 $i = 1;
-                                $sql = "select f_nama, f_idkelas, f_idjurusan from t_siswa";
+                                $sql = "SELECT t_siswa.f_nama, t_kelas.f_nama AS f_kelas, t_jurusan.f_nama AS f_jurusan FROM t_siswa
+                                INNER JOIN t_kelas
+                                ON t_siswa.f_idkelas=t_kelas.f_idkelas
+                                INNER JOIN t_jurusan
+                                ON t_siswa.f_idjurusan=t_jurusan.f_idjurusan
+                                ORDER BY t_kelas.f_idkelas, t_siswa.f_idsiswa, t_jurusan.f_idjurusan";
                                 $row = $db->getALL($sql);
                                 foreach ($row as $siswa) :
 
@@ -159,8 +165,8 @@ $db = new dbController();
                                             <?php echo $i++; ?>
                                         </th>
                                         <td><?php echo $siswa['f_nama'] ?></td>
-                                        <td><?php echo $siswa['f_idkelas'] ?></td>
-                                        <td><?php echo $siswa['f_idjurusan'] ?></td>
+                                        <td><?php echo $siswa['f_kelas'] ?></td>
+                                        <td><?php echo $siswa['f_jurusan'] ?></td>
                                     </tr>
 
                                 <?php endforeach ?>
